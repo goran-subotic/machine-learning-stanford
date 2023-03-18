@@ -1,5 +1,4 @@
-function [J, grad] = cofiCostFunc(params, Y, R, num_users, num_movies, ...
-                                  num_features, lambda)
+function [J, grad] = cofiCostFunc(params, Y, R, num_users, num_movies, num_features, lambda)
 %COFICOSTFUNC Collaborative filtering cost function
 %   [J, grad] = COFICOSTFUNC(params, Y, R, num_users, num_movies, ...
 %   num_features, lambda) returns the cost and gradient for the
@@ -7,9 +6,8 @@ function [J, grad] = cofiCostFunc(params, Y, R, num_users, num_movies, ...
 %
 
 % Unfold the U and W matrices from params
-X = reshape(params(1:num_movies*num_features), num_movies, num_features);
-Theta = reshape(params(num_movies*num_features+1:end), ...
-                num_users, num_features);
+X =     reshape(params(1:num_movies*num_features)    , num_movies, num_features);
+Theta = reshape(params(num_movies*num_features+1:end),  num_users, num_features);
 
             
 % You need to return the following values correctly
@@ -39,6 +37,23 @@ Theta_grad = zeros(size(Theta));
 %        Theta_grad - num_users x num_features matrix, containing the 
 %                     partial derivatives w.r.t. to each element of Theta
 %
+
+
+# X - movie features (num_movies x num_features)
+# Y - user ratings of movies (num_movies x num_users)
+# Theta - user preferences/features (num_users x num_features)
+
+
+##params
+##Y
+##R
+##num_users
+##num_movies
+##num_features
+##lambda
+
+
+reg_sum = (lambda/2) * sum(sum(Theta.^2));
 
 
 
