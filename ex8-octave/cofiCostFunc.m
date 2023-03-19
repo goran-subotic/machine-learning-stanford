@@ -44,36 +44,49 @@ Theta_grad = zeros(size(Theta));
 # Theta - user preferences/features (num_users x num_features)
 
 
-##params
-##Y
-##R
-##num_users
-##num_movies
-##num_features
-##lambda
 
+# Collaborative Filtering Cost:
+
+reg_sum = (lambda/2) * sum(sum(Theta.^2));
+J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2));## + reg_sum;
+
+
+alpha =0.003;
+summ = (((X*Theta').*R)-Y);
 
 # THETA_GRAD:
 
-reg_sum = (lambda/2) * sum(sum(Theta.^2));
-J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2)) + reg_sum;
+for j=1:size(Theta, 1)
+  for k=1:size(Theta, 2)
+    
+    for i=1:size(summ,1)
+      Theta_summ(i,j) = summ(i,j) * X(i,k);
+    endfor
+##    Theta_summ = summ .* X(:,k);
+    
+    ##Theta_grad(j,k) = Theta_grad(j,k) - alpha * ( sum(sum(Theta_summ)) + (lambda*Theta(j,k)) );
+    Theta_grad(j,k) = sum(sum(Theta_summ)) + (lambda*Theta(j,k));
+
+  endfor
+endfor
+
 
 
 # X_GRAD:
 
-#x_reg_sum = (lambda/2) * sum(sum(X.^2));
-#X_grad = (1/2)
+for i=1:size(X, 1)
+  for k=1:size(X, 2)
+    
+    for j=1:size(summ,2)
+      X_summ(i,j) = summ(i,j) * Theta(j,k);
+    endfor
+##    X_summ = summ .* Theta(:,k)';
+    
+    ##X_grad(i,k) = X_grad(i,k) - alpha * ( sum(sum(X_summ)) + (lambda*X(i,k)) );
+    X_grad(i,k) = sum(sum(X_summ)) + (lambda*X(i,k));
 
-
-
-
-
-
-
-
-
-
-
+  endfor
+endfor
 
 
 
@@ -81,7 +94,7 @@ J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2)) + reg_sum;
 
 % =============================================================
 
-grad = [X_grad(:); Theta_grad(:)];
+grad = [X_grad(:); Theta_grad(:)]
 
 end
 
