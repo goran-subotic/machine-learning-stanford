@@ -47,8 +47,8 @@ Theta_grad = zeros(size(Theta));
 
 # Collaborative Filtering Cost:
 
-reg_sum = (lambda/2) * sum(sum(Theta.^2));
-J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2)) + reg_sum;
+J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2));
+J = J + (lambda/2) * sum(sum(Theta.^2));
 
 
 ## k - broje featurea
