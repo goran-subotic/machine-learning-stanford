@@ -51,42 +51,79 @@ reg_sum = (lambda/2) * sum(sum(Theta.^2));
 J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2));## + reg_sum;
 
 
-alpha =0.003;
-summ = (((X*Theta').*R)-Y);
-
-# THETA_GRAD:
-
-for j=1:size(Theta, 1)
-  for k=1:size(Theta, 2)
-    
-    for i=1:size(summ,1)
-      Theta_summ(i,j) = summ(i,j) * X(i,k);
-    endfor
-##    Theta_summ = summ .* X(:,k);
-    
-    ##Theta_grad(j,k) = Theta_grad(j,k) - alpha * ( sum(sum(Theta_summ)) + (lambda*Theta(j,k)) );
-    Theta_grad(j,k) = sum(sum(Theta_summ)) + (lambda*Theta(j,k));
-
-  endfor
-endfor
+## k - broje featurea
+## i - broj filmova
+## j - broj usera
 
 
 
 # X_GRAD:
 
+# Theta (3x5)
+
+
+
 for i=1:size(X, 1)
   for k=1:size(X, 2)
-    
-    for j=1:size(summ,2)
-      X_summ(i,j) = summ(i,j) * Theta(j,k);
+    for j=1:size(R,2)
+      if(R(i,j)==1)
+        X_grad(i,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * Theta(j,k) + (lambda*X(i,k));
+      endif
     endfor
-##    X_summ = summ .* Theta(:,k)';
-    
-    ##X_grad(i,k) = X_grad(i,k) - alpha * ( sum(sum(X_summ)) + (lambda*X(i,k)) );
-    X_grad(i,k) = sum(sum(X_summ)) + (lambda*X(i,k));
-
   endfor
 endfor
+
+
+for j=1:size(Theta, 1)
+  for k=1:size(Theta, 2)
+    for i=1:size(R,1)
+      if(R(i,j)==1)
+        Theta_grad(j,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * X(i,k) + (lambda*Theta(j,k));
+      endif
+    endfor
+  endfor
+endfor
+
+
+
+
+
+##summ = (((X*(Theta.*max(R)')').*R)-Y);
+##
+##for i=1:size(X, 1)
+##  for k=1:size(X, 2)
+##    for j=1:size(summ,2)
+##      X_summ(i,j) = summ(i,j) * Theta(j,k);
+##    endfor
+##  endfor
+##endfor
+##
+##for i=1:size(X, 1)
+##  for k=1:size(X, 2)
+##    X_grad(i,k) = sum(sum(X_summ)) + (lambda*X(i,k));
+##  endfor
+##endfor
+
+
+#X_grad
+
+
+
+# THETA_GRAD:
+
+##for j=1:size(Theta, 1)
+##  for k=1:size(Theta, 2)
+##    for i=1:size(summ,1)
+##      Theta_summ(i,j) = summ(i,j) * X(i,k);
+##    endfor
+##  endfor
+##endfor
+##
+##for j=1:size(Theta, 1)
+##  for k=1:size(Theta, 2)
+##    Theta_grad(j,k) = sum(sum(Theta_summ)) + (lambda*Theta(j,k));
+##  endfor
+##endfor
 
 
 
@@ -94,7 +131,7 @@ endfor
 
 % =============================================================
 
-grad = [X_grad(:); Theta_grad(:)]
+grad = [X_grad(:); Theta_grad(:)];
 
 end
 
