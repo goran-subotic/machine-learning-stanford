@@ -48,7 +48,7 @@ Theta_grad = zeros(size(Theta));
 # Collaborative Filtering Cost:
 
 reg_sum = (lambda/2) * sum(sum(Theta.^2));
-J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2));## + reg_sum;
+J = (1/2) * sum(sum((((X*Theta').*R)-Y).^2)) + reg_sum;
 
 
 ## k - broje featurea
@@ -67,9 +67,10 @@ for i=1:size(X, 1)
   for k=1:size(X, 2)
     for j=1:size(R,2)
       if(R(i,j)==1)
-        X_grad(i,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * Theta(j,k) + (lambda*X(i,k));
+        X_grad(i,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * Theta(j,k);
       endif
     endfor
+    X_grad(i,k) += (lambda*X(i,k));#Regularization!
   endfor
 endfor
 
@@ -78,9 +79,10 @@ for j=1:size(Theta, 1)
   for k=1:size(Theta, 2)
     for i=1:size(R,1)
       if(R(i,j)==1)
-        Theta_grad(j,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * X(i,k) + (lambda*Theta(j,k));
+        Theta_grad(j,k) += ( (X(i,:)*(Theta(j,:)'))-Y(i,j) ) * X(i,k);
       endif
     endfor
+    Theta_grad(j,k) += (lambda*Theta(j,k));#Regularization!
   endfor
 endfor
 
